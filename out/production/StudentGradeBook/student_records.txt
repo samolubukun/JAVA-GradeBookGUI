@@ -1,0 +1,45 @@
+Name: OLUBUKUN SAMUEL
+Matriculation Number: BHU/21/04/05/0038
+Faculty: Science and Technology
+Department: Computer Science
+Level: 200
+
+Subject	Grade	Units	GPA
+CMP202	80.0	3	A (5.0)
+CMP212	75.0	3	A (5.0)
+
+Overall GPA: 5.0
+Name: James Bond
+Matriculation Number: Spy007
+Faculty: Spy
+Department: Field work
+Level: 1
+
+Subject	Grade	Units	GPA
+Spy101	100.0	5	A (5.0)
+spy201	99.0	4	A (5.0)
+spy301	65.0	3	B (4.0)
+
+Overall GPA: 4.75
+Name: OLUBUKUN SAMUEL
+Matriculation Number: BHU/21/04/05/0038
+Faculty: SCI AND TECH
+Department: COMPUTER
+Level: 200
+
+Subject	Grade	Units	GPA
+CMP202	75.0	3	A (5.0)
+CMP201	65.0	2	B (4.0)
+
+Overall GPA: 4.6
+Name: kelvin
+Matriculation Number: BHU/21/04/05/0031
+Faculty: Science
+Department: CMP
+Level: 200
+
+Subject	Grade	Units	GPA
+CMP202	100.0	3	A (5.0)
+CMP209	65.0	2	B (4.0)
+
+Overall GPA: 4.6

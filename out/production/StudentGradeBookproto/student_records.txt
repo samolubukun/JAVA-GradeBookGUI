@@ -1,0 +1,16 @@
+2023-06-24 21:46:27 - Name: OLUBUKUN SAMUEL
+Matriculation Number: BHU/21/04/05/0038
+
+Subject	Grade	Units	GPA
+cmp202	90.0	3	A (5.0)
+cmp212	80.0	3	A (5.0)
+cmp204	77.0	2	A (5.0)
+eps228	75.0	2	A (5.0)
+cmp206	96.0	2	A (5.0)
+gst222	78.0	2	A (5.0)
+gst228	71.0	2	A (5.0)
+bst202	79.0	1	A (5.0)
+mth204	55.0	3	C (3.0)
+phy202	61.0	2	B (4.0)
+
+Overall GPA: 4.636363636363637
