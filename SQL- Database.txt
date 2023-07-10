@@ -1,0 +1,21 @@
+Create a Database in phpmyadmin(XAMPP) called gradebook.
+After creating the database go to the SQL tab and paste the below SQL code:
+
+CREATE TABLE students (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(255) NOT NULL,
+  matriculation VARCHAR(255) NOT NULL,
+  faculty VARCHAR(255) NOT NULL,
+  department VARCHAR(255) NOT NULL,
+  level INT NOT NULL,
+  overall_gpa DOUBLE NOT NULL
+);
+
+CREATE TABLE subjects (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  student_id INT NOT NULL,
+  subject_name VARCHAR(255) NOT NULL,
+  grade DOUBLE NOT NULL,
+  units INT NOT NULL,
+  FOREIGN KEY (student_id) REFERENCES students(id)
+);
