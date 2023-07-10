@@ -1,8 +1,12 @@
 package UI;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import DB.DatabaseConnector;
 import gradebookapp.Student;
 import gradebookapp.Gradebook;
 import gradebookapp.Subject;
@@ -52,7 +56,7 @@ public class GradebookUI {
 
                 if (username.equals("admin") && password.equals("adminpass")) {
                     frame.dispose();
-                    GradebookWindowUI();
+                    MainmenuUI();
                 } else {
                     JOptionPane.showMessageDialog(frame, "Invalid username or password!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -60,6 +64,54 @@ public class GradebookUI {
         });
 
         frame.setVisible(true);
+    }
+
+    JFrame mainMenuFrame = new JFrame("Main Menu");
+    JButton gradebookAppButton = new JButton("Gradebook App");
+    JButton viewButton = new JButton("View");
+    JButton editButton = new JButton("Edit");
+    JButton deleteButton = new JButton("Delete");
+
+    public void MainmenuUI(){
+        mainMenuFrame.setBounds(100, 100, 300, 300);
+        mainMenuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainMenuFrame.getContentPane().setLayout(null);
+
+        gradebookAppButton.setBounds(50, 30, 200, 30);
+        viewButton.setBounds(50, 70, 200, 30);
+        editButton.setBounds(50, 110, 200, 30);
+        deleteButton.setBounds(50, 150, 200, 30);
+
+        gradebookAppButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                mainMenuFrame.dispose();
+                GradebookWindowUI();
+            }
+        });
+
+        viewButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                viewRecords();
+            }
+        });
+
+        editButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+
+        deleteButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+
+        mainMenuFrame.getContentPane().add(gradebookAppButton);
+        mainMenuFrame.getContentPane().add(viewButton);
+        mainMenuFrame.getContentPane().add(editButton);
+        mainMenuFrame.getContentPane().add(deleteButton);
+
+        mainMenuFrame.setVisible(true);
     }
 
     JFrame gradebookframe = new JFrame("Student Gradebook");
@@ -222,11 +274,92 @@ public class GradebookUI {
             }
 
             reportTextArea.append("\nOverall GPA: " + student.getOverallGPA());
+
+            // Save data to the database
+            DatabaseConnector connector = new DatabaseConnector();
+            connector.connect();
+
+            // Insert student information
+            int studentId = connector.insertStudent(student);
+
+            // Insert subject information
+            for (Subject subject : student.getSubjects()) {
+                connector.insertSubject(studentId, subject);
+            }
+
+
+            connector.close();
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(frame, "Invalid input entered!", "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
 
     }
+
+    public void viewRecords() {
+        DatabaseConnector connector = new DatabaseConnector();
+
+        try {
+            connector.connect();
+            ResultSet resultSet = connector.getAllStudents();
+
+            // Create a StringBuilder to store the records
+            StringBuilder records = new StringBuilder();
+
+            // Append the header
+            records.append("Student Records:\n");
+            records.append(String.format("%-5s %-15s %-15s %-15s %-15s %-5s %-10s\n",
+                    "ID", "Name", "Matriculation", "Faculty", "Department", "Level", "Overall GPA"));
+
+            // Iterate over the result set and append each record
+            int previousStudentId = -1;
+            while (resultSet.next()) {
+                int studentId = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                String matriculation = resultSet.getString("matriculation");
+                String faculty = resultSet.getString("faculty");
+                String department = resultSet.getString("department");
+                int level = resultSet.getInt("level");
+                double overallGPA = resultSet.getDouble("overall_gpa");
+
+                // Display student details only once for each student
+                if (studentId != previousStudentId) {
+                    records.append(String.format("%-5d %-15s %-15s %-15s %-15s %-5d %-10.2f\n",
+                            studentId, name, matriculation, faculty, department, level, overallGPA));
+                    previousStudentId = studentId;
+                }
+
+                // Display subject details for each subject
+                String subjectName = resultSet.getString("subject_name");
+                double grade = resultSet.getDouble("grade");
+                int units = resultSet.getInt("units");
+                records.append(String.format("%-5s %-15s %-15s %-15s %-15s %-5s %-10s\n",
+                        "", "", "", "", "", "", String.format("%s (%.2f, %d)", subjectName, grade, units)));
+            }
+
+            // Create a JTextArea to display the records
+            JTextArea recordsTextArea = new JTextArea(records.toString());
+            recordsTextArea.setEditable(false);
+
+            // Create a JScrollPane to make the window scrollable
+            JScrollPane scrollPane = new JScrollPane(recordsTextArea);
+            scrollPane.setPreferredSize(new Dimension(600, 400));
+
+            // Display the records in a dialog window
+            JOptionPane.showMessageDialog(null, scrollPane, "Student Records", JOptionPane.INFORMATION_MESSAGE);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                connector.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+
 
     public void saveReport() {
         try {
